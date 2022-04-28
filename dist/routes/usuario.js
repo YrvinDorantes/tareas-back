@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const user_model_1 = require("../models/user.model");
+const usuario_model_1 = require("../models/usuario.model");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const token_1 = __importDefault(require("../clases/token"));
 const autenticacion_1 = require("../middlewares/autenticacion");
@@ -12,7 +12,7 @@ const userRoutes = (0, express_1.Router)();
 //Login de un usuario
 userRoutes.post('/login', (req, res) => {
     const body = req.body;
-    user_model_1.Usuario.findOne({ email: body.email }, (err, userDB) => {
+    usuario_model_1.Usuario.findOne({ email: body.email }, (err, userDB) => {
         if (err)
             throw err;
         if (!userDB) {
@@ -49,7 +49,7 @@ userRoutes.post('/create', (req, res) => {
         password: bcrypt_1.default.hashSync(req.body.password, 10),
         avatar: req.body.avatar
     };
-    user_model_1.Usuario.create(user).then(userDB => {
+    usuario_model_1.Usuario.create(user).then(userDB => {
         const tokenUser = token_1.default.getJwtToken({
             _id: userDB._id,
             nombre: userDB.nombre,
@@ -74,7 +74,7 @@ userRoutes.post('/update', autenticacion_1.verificaToken, (req, res) => {
         email: req.body.email || req.usuario.email,
         avatar: req.body.avar || req.usuario.avatar
     };
-    user_model_1.Usuario.findByIdAndUpdate(req.usuario._id, user, { new: true }, (err, userDB) => {
+    usuario_model_1.Usuario.findByIdAndUpdate(req.usuario._id, user, { new: true }, (err, userDB) => {
         if (err)
             throw err;
         if (!userDB) {

@@ -2,6 +2,7 @@ import Server from "./clases/server";
 import userRoutes from './routes/usuario';
 import mongoose from 'mongoose';
 import bodyParsr from 'body-parser';
+import taskRoutes from "./routes/task";
 
 
 const server = new Server();
@@ -15,6 +16,8 @@ server.app.use( bodyParsr.json() );
 
 //Rutas de la aplicación
 server.app.use('/user', userRoutes);
+server.app.use('/tasks', taskRoutes);
+
 
 //Conexión a la base de datos de MongoDB
 mongoose.connect('mongodb://localhost:27017/tareas', ( err ) => {
