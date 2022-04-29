@@ -8,6 +8,7 @@ const usuario_1 = __importDefault(require("./routes/usuario"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const task_1 = __importDefault(require("./routes/task"));
+require("dotenv/config");
 const server = new server_1.default();
 //Body Parser
 server.app.use(body_parser_1.default.urlencoded({
@@ -18,7 +19,7 @@ server.app.use(body_parser_1.default.json());
 server.app.use('/user', usuario_1.default);
 server.app.use('/tasks', task_1.default);
 //Conexión a la base de datos de MongoDB
-mongoose_1.default.connect('mongodb://localhost:27017/tareas', (err) => {
+mongoose_1.default.connect(`${process.env.MONGODB_URI}`, (err) => {
     if (err)
         throw err;
     console.log('Base de datos ONLINE');

@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+require("dotenv/config");
 class Token {
     constructor() { }
     static getJwtToken(payload) {
@@ -25,5 +26,5 @@ class Token {
     }
 }
 exports.default = Token;
-Token.seed = 'este-es-el-seed-de-mi-app-secreto';
+Token.seed = `${process.env.SEEED_JWT}`;
 Token.caducidad = '30d';

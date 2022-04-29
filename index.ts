@@ -3,9 +3,11 @@ import userRoutes from './routes/usuario';
 import mongoose from 'mongoose';
 import bodyParsr from 'body-parser';
 import taskRoutes from "./routes/task";
+import "dotenv/config";
 
 
 const server = new Server();
+
 
 
 //Body Parser
@@ -20,7 +22,7 @@ server.app.use('/tasks', taskRoutes);
 
 
 //Conexión a la base de datos de MongoDB
-mongoose.connect('mongodb://localhost:27017/tareas', ( err ) => {
+mongoose.connect( `${process.env.MONGODB_URI}` , ( err ) => {
 
    if ( err ) throw err;
 

@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
+import "dotenv/config";
 
 
 export default class Token {
 
-    private static seed: string = 'este-es-el-seed-de-mi-app-secreto';
+    private static seed: string = `${process.env.SEEED_JWT}`;
     private static caducidad: string = '30d';
 
     constructor() { }
