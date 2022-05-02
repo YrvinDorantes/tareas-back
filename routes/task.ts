@@ -93,9 +93,6 @@ taskRoutes.put('/:taskid', [verificaToken],  (req: any, res: Response) => {
     const body = req.body;
     const taskId    = req.params.taskid;
 
-    console.log(body);
-    console.log(taskId);
-
     Task.updateOne({ _id: taskId }, 
         body, function (err: any, taskDB: any) {
         if (err){

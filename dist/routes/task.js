@@ -17,22 +17,12 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const autenticacion_1 = require("../middlewares/autenticacion");
 const task_model_1 = require("../models/task.model");
 const taskRoutes = (0, express_1.Router)();
-//Obtener Tareas con paginacion
+//Obtener Tareas con paginación asociadas a un usuario
 taskRoutes.get('/', [autenticacion_1.verificaToken], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const ObjectId = mongoose_1.default.Types.ObjectId;
     let pagina = Number(req.query.pagina) || 1;
     let skip = pagina - 1;
     skip = skip * 10;
-    /*const tasks = await Task.find()
-                    .where({ estatus: { $ne: 'Cancelado' }, $match: { $expr : { $eq: [ '$usuario' , { $toObjectId:  req.usuario._id} ] } } })
-                    .sort({_id: -1 })
-                    .skip(skip)
-                    .limit(10)
-                    .populate('usuario')
-                    .exec(
-                        
-                    )*/
-    console.log(req.usuario._id);
     const tasks = yield task_model_1.Task.aggregate([
         {
             $lookup: {
@@ -51,7 +41,6 @@ taskRoutes.get('/', [autenticacion_1.verificaToken], (req, res) => __awaiter(voi
         .skip(skip)
         .limit(10)
         .exec();
-    console.log('********************** RESULTADOS **************', tasks);
     res.json({
         ok: true,
         pagina,
@@ -89,8 +78,6 @@ taskRoutes.post('/', [autenticacion_1.verificaToken], (req, res) => {
 taskRoutes.put('/:taskid', [autenticacion_1.verificaToken], (req, res) => {
     const body = req.body;
     const taskId = req.params.taskid;
-    console.log(body);
-    console.log(taskId);
     task_model_1.Task.updateOne({ _id: taskId }, body, function (err, taskDB) {
         if (err) {
             res.json(err);
