@@ -1,4 +1,5 @@
 import { Router, Response } from 'express';
+import mongoose from 'mongoose';
 import { verificaToken } from '../middlewares/autenticacion';
 import { Task } from '../models/task.model';
 
@@ -6,22 +7,35 @@ import { Task } from '../models/task.model';
 const taskRoutes  = Router();
 
 
-//Obtener Tareas con paginacion
+//Obtener Tareas con paginación asociadas a un usuario
 taskRoutes.get('/', [verificaToken], async (req: any, res: Response) =>{
+    const ObjectId = mongoose.Types.ObjectId;
 
     let pagina = Number(req.query.pagina) || 1;
     let skip = pagina -1;
     skip = skip * 10;
 
-    const tasks = await Task.find()
-                    .where({ estatus: { $ne: 'Cancelado' } })
-                    .sort({_id: -1 })
-                    .skip(skip)
-                    .limit(10)
-                    .populate('usuario')
-                    .exec(
-                        
-                    );
+      const tasks = await Task.aggregate(
+          [
+              {
+                  $lookup:{
+                      from: "usuarios",
+                      localField: "usuario",
+                      foreignField: "_id",
+                      as: "tareasUsuario"
+                  }
+              },
+              {
+                 $unwind: "$tareasUsuario" 
+              },
+              { $match: { $expr : { $eq: [ '$usuario' , { $toObjectId:  req.usuario._id} ] }, estatus: { $ne: 'Cancelado' } } }
+
+          ]
+      )
+      .sort({_id: -1 })
+       .skip(skip)
+       .limit(10)
+       .exec()
 
     res.json({
         ok: true,

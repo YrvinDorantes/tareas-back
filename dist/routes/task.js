@@ -8,23 +8,50 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const mongoose_1 = __importDefault(require("mongoose"));
 const autenticacion_1 = require("../middlewares/autenticacion");
 const task_model_1 = require("../models/task.model");
 const taskRoutes = (0, express_1.Router)();
 //Obtener Tareas con paginacion
 taskRoutes.get('/', [autenticacion_1.verificaToken], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const ObjectId = mongoose_1.default.Types.ObjectId;
     let pagina = Number(req.query.pagina) || 1;
     let skip = pagina - 1;
     skip = skip * 10;
-    const tasks = yield task_model_1.Task.find()
-        .where({ estatus: { $ne: 'Cancelado' } })
+    /*const tasks = await Task.find()
+                    .where({ estatus: { $ne: 'Cancelado' }, $match: { $expr : { $eq: [ '$usuario' , { $toObjectId:  req.usuario._id} ] } } })
+                    .sort({_id: -1 })
+                    .skip(skip)
+                    .limit(10)
+                    .populate('usuario')
+                    .exec(
+                        
+                    )*/
+    console.log(req.usuario._id);
+    const tasks = yield task_model_1.Task.aggregate([
+        {
+            $lookup: {
+                from: "usuarios",
+                localField: "usuario",
+                foreignField: "_id",
+                as: "tareasUsuario"
+            }
+        },
+        {
+            $unwind: "$tareasUsuario"
+        },
+        { $match: { $expr: { $eq: ['$usuario', { $toObjectId: req.usuario._id }] }, estatus: { $ne: 'Cancelado' } } }
+    ])
         .sort({ _id: -1 })
         .skip(skip)
         .limit(10)
-        .populate('usuario')
         .exec();
+    console.log('********************** RESULTADOS **************', tasks);
     res.json({
         ok: true,
         pagina,
