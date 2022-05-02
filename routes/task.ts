@@ -7,13 +7,18 @@ const taskRoutes  = Router();
 
 
 //Obtener Tareas con paginacion
-taskRoutes.get('/', async (req: any, res: Response) =>{
+taskRoutes.get('/', [verificaToken], async (req: any, res: Response) =>{
+
+    
+
+    console.log(req.usuario);
 
     let pagina = Number(req.query.pagina) || 1;
     let skip = pagina -1;
     skip = skip * 10;
 
     const tasks = await Task.find()
+                    .where({ estatus: { $ne: 'Cancelado' }  })
                     .sort({_id: -1 })
                     .skip(skip)
                     .limit(10)

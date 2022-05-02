@@ -11,6 +11,7 @@ export const verificaToken = ( req: any, res: Response, next: NextFunction  ) =>
             //console.log('Decoded', decoded );
             req.usuario = decoded.usuario;
             next();
+            
         })
         .catch( err => {
 

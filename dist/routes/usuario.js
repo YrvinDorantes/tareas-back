@@ -28,6 +28,7 @@ userRoutes.post('/login', (req, res) => {
                 email: userDB.email,
                 avatar: userDB.avatar
             });
+            console.log(tokenUser);
             res.json({
                 ok: true,
                 token: tokenUser
@@ -72,7 +73,7 @@ userRoutes.post('/update', autenticacion_1.verificaToken, (req, res) => {
     const user = {
         nombre: req.body.nombre || req.usuario.nombre,
         email: req.body.email || req.usuario.email,
-        avatar: req.body.avar || req.usuario.avatar
+        avatar: req.body.avatar || req.usuario.avatar
     };
     usuario_model_1.Usuario.findByIdAndUpdate(req.usuario._id, user, { new: true }, (err, userDB) => {
         if (err)
@@ -93,6 +94,13 @@ userRoutes.post('/update', autenticacion_1.verificaToken, (req, res) => {
             ok: true,
             token: tokenUser
         });
+    });
+});
+userRoutes.get('/', [autenticacion_1.verificaToken], (req, res) => {
+    const usuario = req.usuario;
+    res.json({
+        ok: true,
+        usuario
     });
 });
 exports.default = userRoutes;

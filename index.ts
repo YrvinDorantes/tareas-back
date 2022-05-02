@@ -1,6 +1,9 @@
 import Server from "./clases/server";
 import userRoutes from './routes/usuario';
 import mongoose from 'mongoose';
+
+import cors from 'cors';
+
 import bodyParsr from 'body-parser';
 import taskRoutes from "./routes/task";
 import "dotenv/config";
@@ -15,6 +18,10 @@ server.app.use( bodyParsr.urlencoded({
     extended: true
 }) );
 server.app.use( bodyParsr.json() );
+
+
+//Configuración del CORS
+server.app.use( cors({ origin: true, credentials: true}));
 
 //Rutas de la aplicación
 server.app.use('/user', userRoutes);

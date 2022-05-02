@@ -14,11 +14,13 @@ const autenticacion_1 = require("../middlewares/autenticacion");
 const task_model_1 = require("../models/task.model");
 const taskRoutes = (0, express_1.Router)();
 //Obtener Tareas con paginacion
-taskRoutes.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+taskRoutes.get('/', [autenticacion_1.verificaToken], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.usuario);
     let pagina = Number(req.query.pagina) || 1;
     let skip = pagina - 1;
     skip = skip * 10;
     const tasks = yield task_model_1.Task.find()
+        .where({ estatus: { $ne: 'Cancelado' } })
         .sort({ _id: -1 })
         .skip(skip)
         .limit(10)

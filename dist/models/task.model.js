@@ -29,6 +29,9 @@ const taskSchema = new mongoose_1.Schema({
     updateAt: {
         type: Date
     },
+    dateTask: {
+        type: Date
+    },
     usuario: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'Usuario',
@@ -37,6 +40,7 @@ const taskSchema = new mongoose_1.Schema({
 });
 taskSchema.pre('save', function (next) {
     this.created = new Date();
+    this.updatedAt = new Date();
     next();
 });
 exports.Task = (0, mongoose_1.model)('Task', taskSchema);

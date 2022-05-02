@@ -30,6 +30,9 @@ const taskSchema = new Schema({
     updateAt:{
         type: Date
     },
+    dateTask:{
+        type: Date
+    },
     usuario:{
         type: Schema.Types.ObjectId,
         ref: 'Usuario',
@@ -39,6 +42,7 @@ const taskSchema = new Schema({
 
 taskSchema.pre<ITask>('save', function( next) {
     this.created = new Date();
+    this.updatedAt = new Date();
     next();
 });
 
@@ -50,6 +54,7 @@ interface ITask extends Document {
     estatus: String,
     created: Date,
     updatedAt: Date,
+    dateTask: Date,
     usuario: String
 }
 
