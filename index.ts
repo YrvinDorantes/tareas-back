@@ -1,10 +1,16 @@
 import Server from "./clases/server";
 import userRoutes from './routes/usuario';
 import mongoose from 'mongoose';
+
+import cors from 'cors';
+
 import bodyParsr from 'body-parser';
+import taskRoutes from "./routes/task";
+import "dotenv/config";
 
 
 const server = new Server();
+
 
 
 //Body Parser
@@ -13,11 +19,17 @@ server.app.use( bodyParsr.urlencoded({
 }) );
 server.app.use( bodyParsr.json() );
 
+
+//Configuración del CORS
+server.app.use( cors({ origin: true, credentials: true}));
+
 //Rutas de la aplicación
 server.app.use('/user', userRoutes);
+server.app.use('/tasks', taskRoutes);
+
 
 //Conexión a la base de datos de MongoDB
-mongoose.connect('mongodb://localhost:27017/tareas', ( err ) => {
+mongoose.connect( `${process.env.MONGODB_URI}` , ( err ) => {
 
    if ( err ) throw err;
 
