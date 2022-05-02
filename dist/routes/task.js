@@ -15,7 +15,6 @@ const task_model_1 = require("../models/task.model");
 const taskRoutes = (0, express_1.Router)();
 //Obtener Tareas con paginacion
 taskRoutes.get('/', [autenticacion_1.verificaToken], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.usuario);
     let pagina = Number(req.query.pagina) || 1;
     let skip = pagina - 1;
     skip = skip * 10;
@@ -24,7 +23,7 @@ taskRoutes.get('/', [autenticacion_1.verificaToken], (req, res) => __awaiter(voi
         .sort({ _id: -1 })
         .skip(skip)
         .limit(10)
-        .populate([{ path: 'usuario', select: ['nombre', 'email'] },])
+        .populate('usuario')
         .exec();
     res.json({
         ok: true,
@@ -62,7 +61,6 @@ taskRoutes.post('/', [autenticacion_1.verificaToken], (req, res) => {
 //Actualizar tarea asignada a un usuario
 taskRoutes.put('/:taskid', [autenticacion_1.verificaToken], (req, res) => {
     const body = req.body;
-    //body.usuario = req.usuario._id;
     const taskId = req.params.taskid;
     console.log(body);
     console.log(taskId);

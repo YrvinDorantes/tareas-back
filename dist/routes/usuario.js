@@ -28,7 +28,6 @@ userRoutes.post('/login', (req, res) => {
                 email: userDB.email,
                 avatar: userDB.avatar
             });
-            console.log(tokenUser);
             res.json({
                 ok: true,
                 token: tokenUser

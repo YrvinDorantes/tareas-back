@@ -33,9 +33,6 @@ userRoutes.post('/login',(req:Request, res: Response)=>{
                 avatar: userDB.avatar
             });
 
-
-            console.log (tokenUser);
-
            res.json({
                ok:true,
                token: tokenUser
